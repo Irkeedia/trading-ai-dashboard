@@ -37,7 +37,7 @@ export default function NewsPage() {
             return (
               <div
                 key={n.id}
-                className="glass rounded-xl px-5 py-4 hover:border-[var(--border-bright)] transition-all group"
+                className="glass rounded-lg px-4 sm:px-5 py-3 sm:py-4 hover:border-[var(--border-bright)] transition-all group"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -54,7 +54,7 @@ export default function NewsPage() {
                         {n.source} · <span className="num">{d.toLocaleDateString("fr-FR")}</span>
                       </span>
                       {n.related_symbols && (
-                        <span className="text-[var(--cyan)]">{n.related_symbols}</span>
+                        <span className="text-[var(--primary)]">{n.related_symbols}</span>
                       )}
                     </div>
                   </div>
@@ -76,7 +76,7 @@ export default function NewsPage() {
                         href={n.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[var(--fg-muted)] hover:text-[var(--cyan)] transition-colors"
+                        className="text-[var(--fg-muted)] hover:text-[var(--primary)] transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>

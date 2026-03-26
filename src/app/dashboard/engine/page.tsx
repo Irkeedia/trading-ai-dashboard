@@ -84,8 +84,8 @@ export default function EnginePage() {
           className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all
             ${
               isRunning
-                ? "bg-[var(--red-dim)] text-[var(--red)] hover:bg-[var(--red)]/20 border border-[var(--red)]/30"
-                : "bg-[var(--cyan-dim)] text-[var(--cyan)] hover:bg-[var(--cyan)]/20 border border-[var(--cyan)]/30"
+                ? "bg-[var(--loss-dim)] text-[var(--loss)] hover:bg-[var(--loss)]/20 border border-[var(--loss)]/30"
+                : "bg-[var(--primary-dim)] text-[var(--primary)] hover:bg-[var(--primary)]/20 border border-[var(--primary)]/30"
             }
             disabled:opacity-40 disabled:cursor-not-allowed`}
         >
@@ -114,9 +114,9 @@ export default function EnginePage() {
 
       {/* Error */}
       {status?.error && (
-        <div className="glass rounded-xl p-4 border-[var(--red)]/30">
-          <p className="text-[10px] uppercase tracking-widest text-[var(--red)] font-semibold mb-1">Erreur</p>
-          <p className="text-sm text-[var(--red)]/80">{status.error}</p>
+        <div className="glass rounded-lg p-4 border-[var(--loss)]/30">
+          <p className="text-[10px] uppercase tracking-widest text-[var(--loss)] font-semibold mb-1">Erreur</p>
+          <p className="text-sm text-[var(--loss)]/80">{status.error}</p>
         </div>
       )}
 
@@ -178,7 +178,7 @@ export default function EnginePage() {
               {config.watchlist.map((s) => (
                 <span
                   key={s}
-                  className="px-2.5 py-1 bg-[var(--cyan-dim)] text-[var(--cyan)] rounded-md text-[10px] font-semibold uppercase tracking-wider"
+                  className="px-2.5 py-1 bg-[var(--primary-dim)] text-[var(--primary)] rounded-md text-[10px] font-semibold uppercase tracking-wider"
                 >
                   {s}
                 </span>

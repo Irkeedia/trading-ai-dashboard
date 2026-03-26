@@ -6,6 +6,7 @@ interface Column<T> {
   render?: (row: T) => React.ReactNode;
   className?: string;
   mono?: boolean;
+  hideOnMobile?: boolean;
 }
 
 interface DataTableProps<T> {
@@ -28,15 +29,16 @@ export function DataTable<T extends Record<string, unknown>>({
   }
 
   return (
-    <div className="overflow-x-auto -mx-5">
-      <table className="w-full min-w-[640px]">
+    <div className="overflow-x-auto -mx-4 sm:-mx-5">
+      <table className="w-full min-w-[600px]">
         <thead>
           <tr>
             {columns.map((col) => (
               <th
                 key={col.key}
                 className={cn(
-                  "text-left text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-muted)] pb-3 px-5",
+                  "text-left text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[var(--fg-muted)] pb-3 px-4 sm:px-5",
+                  col.hideOnMobile && "hidden md:table-cell",
                   col.className
                 )}
               >
@@ -49,14 +51,15 @@ export function DataTable<T extends Record<string, unknown>>({
           {data.map((row, i) => (
             <tr
               key={i}
-              className="border-t border-[var(--border)] hover:bg-white/[0.015] transition-colors"
+              className="border-t border-[var(--border)] hover:bg-[var(--primary)]/[0.03] transition-colors"
             >
               {columns.map((col) => (
                 <td
                   key={col.key}
                   className={cn(
-                    "py-3 px-5 text-sm",
+                    "py-2.5 sm:py-3 px-4 sm:px-5 text-xs sm:text-sm",
                     col.mono && "num",
+                    col.hideOnMobile && "hidden md:table-cell",
                     col.className
                   )}
                 >

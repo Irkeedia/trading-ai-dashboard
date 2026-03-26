@@ -142,22 +142,22 @@ export default function DashboardPage() {
 
       {/* Quick stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="glass rounded-xl p-4 text-center">
-          <Zap className="w-4 h-4 text-[var(--cyan)] mx-auto mb-1.5" />
+        <div className="glass rounded-lg p-3 sm:p-4 text-center">
+          <Zap className="w-4 h-4 text-[var(--primary)] mx-auto mb-1.5" />
           <p className="text-lg font-bold num">{engine.cycle_count ?? 0}</p>
           <p className="text-[10px] text-[var(--fg-muted)] uppercase tracking-widest">Cycles</p>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <TrendingUp className="w-4 h-4 text-[var(--cyan)] mx-auto mb-1.5" />
+        <div className="glass rounded-lg p-3 sm:p-4 text-center">
+          <TrendingUp className="w-4 h-4 text-[var(--green)] mx-auto mb-1.5" />
           <p className="text-lg font-bold num">{stats.wins ?? 0}</p>
           <p className="text-[10px] text-[var(--fg-muted)] uppercase tracking-widest">Gagnants</p>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <TrendingDown className="w-4 h-4 text-[var(--red)] mx-auto mb-1.5" />
+        <div className="glass rounded-lg p-3 sm:p-4 text-center">
+          <TrendingDown className="w-4 h-4 text-[var(--loss)] mx-auto mb-1.5" />
           <p className="text-lg font-bold num">{stats.losses ?? 0}</p>
           <p className="text-[10px] text-[var(--fg-muted)] uppercase tracking-widest">Perdants</p>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="glass rounded-lg p-3 sm:p-4 text-center">
           <Wallet className="w-4 h-4 text-[var(--amber)] mx-auto mb-1.5" />
           <p className="text-lg font-bold num">
             ${(portfolio.available_balance ?? 0).toLocaleString("en-US", { minimumFractionDigits: 0 })}

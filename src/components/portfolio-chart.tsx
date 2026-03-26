@@ -16,56 +16,56 @@ interface PortfolioChartProps {
 export function PortfolioChart({ data }: PortfolioChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="h-[280px] flex items-center justify-center text-[var(--fg-muted)] text-xs uppercase tracking-widest">
+      <div className="h-[200px] sm:h-[280px] flex items-center justify-center text-[var(--fg-muted)] text-xs uppercase tracking-widest">
         En attente de données...
       </div>
     );
   }
 
   return (
-    <div className="h-[280px]">
+    <div className="h-[200px] sm:h-[280px]">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#06d6a0" stopOpacity={0.25} />
-              <stop offset="100%" stopColor="#06d6a0" stopOpacity={0} />
+              <stop offset="0%" stopColor="#e11d48" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#e11d48" stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 10, fill: "#4b5563", fontFamily: "JetBrains Mono" }}
+            tick={{ fontSize: 9, fill: "#5c4a54", fontFamily: "JetBrains Mono" }}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            tick={{ fontSize: 10, fill: "#4b5563", fontFamily: "JetBrains Mono" }}
+            tick={{ fontSize: 9, fill: "#5c4a54", fontFamily: "JetBrains Mono" }}
             tickLine={false}
             axisLine={false}
             tickFormatter={(v: number) => `${(v / 1000).toFixed(1)}k`}
-            width={42}
+            width={38}
           />
           <Tooltip
             contentStyle={{
-              background: "rgba(10, 10, 18, 0.9)",
+              background: "rgba(16, 8, 14, 0.92)",
               backdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: "8px",
+              border: "1px solid rgba(225, 29, 72, 0.2)",
+              borderRadius: "6px",
               fontSize: "11px",
               fontFamily: "JetBrains Mono",
               padding: "8px 12px",
             }}
-            labelStyle={{ color: "#4b5563", fontSize: "10px", marginBottom: "4px" }}
+            labelStyle={{ color: "#5c4a54", fontSize: "10px", marginBottom: "4px" }}
             formatter={(value: number) => [`$${value.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, ""]}
           />
           <Area
             type="monotone"
             dataKey="value"
-            stroke="#06d6a0"
-            strokeWidth={1.5}
+            stroke="#e11d48"
+            strokeWidth={2}
             fill="url(#grad)"
             dot={false}
-            activeDot={{ r: 3, fill: "#06d6a0", strokeWidth: 0 }}
+            activeDot={{ r: 3, fill: "#e11d48", strokeWidth: 0 }}
           />
         </AreaChart>
       </ResponsiveContainer>

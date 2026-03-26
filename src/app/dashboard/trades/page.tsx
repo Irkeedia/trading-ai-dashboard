@@ -81,7 +81,7 @@ export default function TradesPage() {
       label: "PnL",
       mono: true,
       render: (row: Trade) => (
-        <span className={row.pnl >= 0 ? "text-[var(--cyan)]" : "text-[var(--red)]"}>
+        <span className={row.pnl >= 0 ? "text-[var(--green)]" : "text-[var(--loss)]"}>
           {row.pnl >= 0 ? "+" : ""}${row.pnl.toFixed(2)}
         </span>
       ),

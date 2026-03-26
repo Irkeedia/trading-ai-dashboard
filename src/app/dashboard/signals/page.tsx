@@ -53,7 +53,7 @@ export default function SignalsPage() {
           <div className="flex items-center gap-2">
             <div className="w-16 h-1 bg-[var(--border)] rounded-full overflow-hidden">
               <div
-                className="h-full rounded-full bg-[var(--cyan)] animate-fill"
+                className="h-full rounded-full bg-[var(--primary)] animate-fill"
                 style={{ width: `${pct}%` }}
               />
             </div>
@@ -78,7 +78,7 @@ export default function SignalsPage() {
       key: "acted_on",
       label: "Exec",
       render: (row: Signal) => (
-        <span className={row.acted_on ? "text-[var(--cyan)]" : "text-[var(--fg-muted)]"}>
+        <span className={row.acted_on ? "text-[var(--green)]" : "text-[var(--fg-muted)]"}>
           {row.acted_on ? "✓" : "—"}
         </span>
       ),
