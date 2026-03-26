@@ -16,14 +16,14 @@ interface PortfolioChartProps {
 export function PortfolioChart({ data }: PortfolioChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="h-[200px] sm:h-[280px] flex items-center justify-center text-[var(--fg-muted)] text-xs uppercase tracking-widest">
+      <div className="h-[260px] sm:h-[340px] flex items-center justify-center text-[var(--fg-muted)] text-sm uppercase tracking-wider">
         En attente de données...
       </div>
     );
   }
 
   return (
-    <div className="h-[200px] sm:h-[280px]">
+    <div className="h-[260px] sm:h-[340px]">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
           <defs>
@@ -34,28 +34,28 @@ export function PortfolioChart({ data }: PortfolioChartProps) {
           </defs>
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 9, fill: "#5c4a54", fontFamily: "JetBrains Mono" }}
+            tick={{ fontSize: 11, fill: "#9f7b89", fontFamily: "JetBrains Mono" }}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            tick={{ fontSize: 9, fill: "#5c4a54", fontFamily: "JetBrains Mono" }}
+            tick={{ fontSize: 11, fill: "#9f7b89", fontFamily: "JetBrains Mono" }}
             tickLine={false}
             axisLine={false}
             tickFormatter={(v: number) => `${(v / 1000).toFixed(1)}k`}
-            width={38}
+            width={48}
           />
           <Tooltip
             contentStyle={{
               background: "rgba(16, 8, 14, 0.92)",
               backdropFilter: "blur(12px)",
-              border: "1px solid rgba(225, 29, 72, 0.2)",
-              borderRadius: "6px",
-              fontSize: "11px",
+              border: "1px solid rgba(225, 29, 72, 0.35)",
+              borderRadius: "10px",
+              fontSize: "12px",
               fontFamily: "JetBrains Mono",
-              padding: "8px 12px",
+              padding: "10px 14px",
             }}
-            labelStyle={{ color: "#5c4a54", fontSize: "10px", marginBottom: "4px" }}
+            labelStyle={{ color: "#9f7b89", fontSize: "11px", marginBottom: "4px" }}
             formatter={(value: number) => [`$${value.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, ""]}
           />
           <Area

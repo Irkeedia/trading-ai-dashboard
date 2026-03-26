@@ -12,7 +12,7 @@ interface MetricProps {
 export function Metric({ label, value, sub, trend, large, className }: MetricProps) {
   return (
     <div className={cn(
-      "glass rounded-lg p-3 sm:p-4 transition-all group relative overflow-hidden",
+      "glass rounded-xl p-4 sm:p-5 transition-all group relative overflow-hidden",
       className
     )}>
       {/* Subtle side accent */}
@@ -28,7 +28,7 @@ export function Metric({ label, value, sub, trend, large, className }: MetricPro
       <p
         className={cn(
           "num font-bold leading-none",
-          large ? "text-2xl sm:text-3xl" : "text-lg sm:text-xl",
+          large ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl",
           trend === "up" && "text-[var(--green)]",
           trend === "down" && "text-[var(--loss)]",
           !trend && "text-[var(--fg)]"
@@ -36,7 +36,7 @@ export function Metric({ label, value, sub, trend, large, className }: MetricPro
       >
         {value}
       </p>
-      {sub && <p className="text-[10px] sm:text-[11px] text-[var(--fg-muted)] mt-1 sm:mt-1.5 num">{sub}</p>}
+      {sub && <p className="text-[11px] sm:text-xs text-[var(--fg-muted)] mt-2 num">{sub}</p>}
     </div>
   );
 }
@@ -55,16 +55,16 @@ export function Panel({
   noPad?: boolean;
 }) {
   return (
-    <div className={cn("glass rounded-lg overflow-hidden", className)}>
+    <div className={cn("glass rounded-xl overflow-hidden", className)}>
       {title && (
-        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-[var(--border)]">
-          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[var(--primary)]">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-3.5 border-b border-[var(--border)]">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--primary-soft)]">
             {title}
           </h2>
           {action}
         </div>
       )}
-      <div className={noPad ? "" : "p-4 sm:p-5"}>{children}</div>
+      <div className={noPad ? "" : "p-5 sm:p-6"}>{children}</div>
     </div>
   );
 }
@@ -79,7 +79,7 @@ export function Tag({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider",
+        "inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider",
         variant === "buy" && "bg-[var(--green-dim)] text-[var(--green)]",
         variant === "sell" && "bg-[var(--loss-dim)] text-[var(--loss)]",
         variant === "warn" && "bg-[var(--amber-dim)] text-[var(--amber)]",

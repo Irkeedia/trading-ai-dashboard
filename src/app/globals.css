@@ -5,14 +5,14 @@
 }
 
 :root {
-  --bg: #0a0608;
-  --bg-raised: #12090e;
-  --bg-glass: rgba(16, 8, 14, 0.78);
-  --fg: #f5f0f2;
-  --fg-dim: #a8959e;
-  --fg-muted: #5c4a54;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-bright: rgba(255, 255, 255, 0.12);
+  --bg: #090509;
+  --bg-raised: #140914;
+  --bg-glass: rgba(19, 10, 18, 0.8);
+  --fg: #fff7fa;
+  --fg-dim: #d4bcc6;
+  --fg-muted: #9f7b89;
+  --border: rgba(255, 255, 255, 0.13);
+  --border-bright: rgba(255, 255, 255, 0.22);
   --primary: #e11d48;
   --primary-dim: rgba(225, 29, 72, 0.2);
   --primary-soft: #ff3d6b;
@@ -22,16 +22,19 @@
   --amber-dim: rgba(245, 158, 11, 0.2);
   --loss: #ef4444;
   --loss-dim: rgba(239, 68, 68, 0.2);
-  --glow: 0 0 40px rgba(225, 29, 72, 0.1);
+  --glow: 0 0 44px rgba(225, 29, 72, 0.2);
   --glow-line-color: var(--primary);
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(225, 29, 72, 0.13), transparent 60%),
+    radial-gradient(ellipse 90% 70% at 85% 120%, rgba(225, 29, 72, 0.08), transparent 55%),
+    var(--bg);
   color: var(--fg);
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family: "Sora", system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
@@ -42,40 +45,41 @@ body {
       -45deg,
       transparent,
       transparent 80px,
-      rgba(225, 29, 72, 0.015) 80px,
-      rgba(225, 29, 72, 0.015) 81px
+      rgba(225, 29, 72, 0.02) 80px,
+      rgba(225, 29, 72, 0.02) 81px
     );
 }
 
 /* Glass cards */
 .glass {
   background: var(--bg-glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--border);
-  transition: border-color 0.2s, box-shadow 0.3s;
+  transition: border-color 0.2s, box-shadow 0.3s, transform 0.2s;
 }
 .glass:hover {
   border-color: var(--border-bright);
   box-shadow: var(--glow);
+  transform: translateY(-1px);
 }
 
 /* Accent line */
 .glow-line {
-  height: 1px;
+  height: 2px;
   background: linear-gradient(90deg, transparent, var(--primary), transparent);
-  opacity: 0.35;
+  opacity: 0.5;
 }
 
 /* Status dots */
 .glow-dot {
-  width: 6px; height: 6px;
+  width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--green);
   box-shadow: 0 0 8px var(--green), 0 0 18px var(--green-dim);
 }
 .glow-dot-red {
-  width: 6px; height: 6px;
+  width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--loss);
   box-shadow: 0 0 8px var(--loss), 0 0 18px var(--loss-dim);
