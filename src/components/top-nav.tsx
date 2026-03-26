@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useApi } from "@/lib/hooks";
+import { Settings } from "lucide-react";
 
 const tabs = [
   { href: "/dashboard", label: "Overview" },
@@ -74,6 +75,17 @@ export function TopNav() {
               {isRunning ? "LIVE" : "OFF"}
             </span>
           </div>
+          <Link
+            href="/dashboard/settings"
+            className={cn(
+              "w-7 h-7 rounded flex items-center justify-center transition-colors",
+              pathname.startsWith("/dashboard/settings")
+                ? "bg-[var(--primary)] text-white"
+                : "bg-white/5 text-[var(--fg-muted)] hover:text-[var(--fg)] hover:bg-white/10"
+            )}
+          >
+            <Settings className="w-3.5 h-3.5" />
+          </Link>
           <div className="w-7 h-7 rounded bg-[var(--primary)] flex items-center justify-center text-[10px] font-bold text-white">
             M
           </div>

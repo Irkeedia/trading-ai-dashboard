@@ -73,6 +73,7 @@ export default function SignalsPage() {
       key: "timeframe",
       label: "TF",
       mono: true,
+      hideOnMobile: true,
     },
     {
       key: "acted_on",
@@ -86,6 +87,7 @@ export default function SignalsPage() {
     {
       key: "details",
       label: "Détails",
+      hideOnMobile: true,
       render: (row: Signal) => (
         <span className="text-[10px] text-[var(--fg-muted)] max-w-[180px] truncate block">
           {row.details || "—"}

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Metric, Panel } from "@/components/cards";
 import { useApi } from "@/lib/hooks";
 import { apiFetch } from "@/lib/utils";
-import { Play, Square } from "lucide-react";
+import { Play, Square, RotateCcw, Settings } from "lucide-react";
+import Link from "next/link";
 
 interface EngineStatus {
   status: string;
@@ -74,34 +75,57 @@ export default function EnginePage() {
   }
 
   return (
-    <div className="space-y-5">
-      {/* Top bar with action button */}
-      <div className="flex items-center justify-between">
-        <div />
-        <button
-          onClick={() => handleAction(isRunning ? "stop" : "start")}
-          disabled={actionLoading}
-          className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all
-            ${
-              isRunning
-                ? "bg-[var(--loss-dim)] text-[var(--loss)] hover:bg-[var(--loss)]/20 border border-[var(--loss)]/30"
-                : "bg-[var(--primary-dim)] text-[var(--primary)] hover:bg-[var(--primary)]/20 border border-[var(--primary)]/30"
-            }
-            disabled:opacity-40 disabled:cursor-not-allowed`}
-        >
-          {actionLoading ? (
-            <span className="animate-spin">⏳</span>
-          ) : isRunning ? (
-            <Square className="w-3.5 h-3.5" />
-          ) : (
-            <Play className="w-3.5 h-3.5" />
-          )}
-          {isRunning ? "Stop" : "Start"}
-        </button>
+    <div className="space-y-5 max-w-3xl">
+      {/* Big status card */}
+      <div className="glass rounded-lg p-6 sm:p-8 text-center">
+        <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center ${isRunning ? "bg-[var(--green-dim)]" : "bg-[var(--loss-dim)]"}`}>
+          <div className={`w-4 h-4 rounded-full relative ${isRunning ? "glow-dot" : "glow-dot-red"}`}>
+            {isRunning && <span className="pulse-ring" />}
+          </div>
+        </div>
+        <h2 className="text-2xl font-bold mb-1">
+          {isRunning ? "Moteur actif" : "Moteur arrêté"}
+        </h2>
+        <p className="text-sm text-[var(--fg-muted)]">
+          {isRunning
+            ? `${status?.mode || "PAPER"} · ${status?.exchange || "binance"} · ${uptimeStr}`
+            : "Démarrez le moteur pour trader automatiquement"
+          }
+        </p>
+
+        {/* Action buttons */}
+        <div className="flex items-center justify-center gap-3 mt-6">
+          <button
+            onClick={() => handleAction(isRunning ? "stop" : "start")}
+            disabled={actionLoading}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-all
+              ${isRunning
+                ? "bg-[var(--loss)] text-white hover:brightness-110"
+                : "bg-[var(--green)] text-white hover:brightness-110"
+              }
+              disabled:opacity-40 disabled:cursor-not-allowed`}
+          >
+            {actionLoading ? (
+              <RotateCcw className="w-4 h-4 animate-spin" />
+            ) : isRunning ? (
+              <Square className="w-4 h-4" />
+            ) : (
+              <Play className="w-4 h-4" />
+            )}
+            {isRunning ? "Arrêter" : "Démarrer"}
+          </button>
+          <Link
+            href="/dashboard/settings"
+            className="flex items-center gap-2 px-5 py-2.5 rounded text-sm font-semibold bg-white/5 text-[var(--fg-dim)] hover:bg-white/10 transition-all"
+          >
+            <Settings className="w-4 h-4" />
+            Configurer
+          </Link>
+        </div>
       </div>
 
-      {/* Status Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {/* Status metrics */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Metric
           label="Statut"
           value={isRunning ? "RUNNING" : "STOPPED"}
@@ -114,78 +138,46 @@ export default function EnginePage() {
 
       {/* Error */}
       {status?.error && (
-        <div className="glass rounded-lg p-4 border-[var(--loss)]/30">
+        <div className="glass rounded-lg p-4 border border-[var(--loss)]/30">
           <p className="text-[10px] uppercase tracking-widest text-[var(--loss)] font-semibold mb-1">Erreur</p>
           <p className="text-sm text-[var(--loss)]/80">{status.error}</p>
         </div>
       )}
 
-      <div className="glow-line" />
-
-      {/* Config */}
+      {/* Quick config summary */}
       {config && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          <Panel title="Trading Config">
-            <div className="space-y-2.5">
+        <>
+          <div className="glow-line" />
+          <Panel title="Configuration active" action={
+            <Link href="/dashboard/settings" className="text-[10px] text-[var(--primary)] hover:underline font-semibold uppercase tracking-wider">
+              Modifier
+            </Link>
+          }>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2">
               {[
                 ["Exchange", config.exchange],
                 ["Devise", config.trading.base_currency],
-                ["Intervalle", `${config.trading.check_interval_seconds}s`],
                 ["Positions max", config.trading.max_open_positions],
-              ].map(([label, value]) => (
-                <div key={String(label)} className="flex justify-between text-sm">
-                  <span className="text-[var(--fg-muted)] text-xs uppercase tracking-wider">{label}</span>
-                  <span className="font-medium num text-sm">{String(value)}</span>
-                </div>
-              ))}
-            </div>
-          </Panel>
-
-          <Panel title="Risk Management">
-            <div className="space-y-2.5">
-              {[
-                ["Risque max/trade", `${config.risk.max_portfolio_risk_pct}%`],
-                ["Taille max position", `${config.risk.max_position_size_pct}%`],
                 ["Stop Loss", `${config.risk.stop_loss_pct}%`],
                 ["Take Profit", `${config.risk.take_profit_pct}%`],
-                ["Trailing Stop", `${config.risk.trailing_stop_pct}%`],
-                ["Perte max/jour", `${config.risk.max_daily_loss_pct}%`],
+                ["IA", config.ai.model],
               ].map(([label, value]) => (
-                <div key={String(label)} className="flex justify-between text-sm">
-                  <span className="text-[var(--fg-muted)] text-xs uppercase tracking-wider">{label}</span>
-                  <span className="font-medium num text-sm">{value}</span>
+                <div key={String(label)} className="flex justify-between sm:flex-col sm:gap-0.5">
+                  <span className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider">{label}</span>
+                  <span className="text-sm font-medium num">{String(value)}</span>
                 </div>
               ))}
             </div>
-          </Panel>
-
-          <Panel title="AI Engine">
-            <div className="space-y-2.5">
-              {[
-                ["Provider", config.ai.provider],
-                ["Modèle", config.ai.model],
-              ].map(([label, value]) => (
-                <div key={String(label)} className="flex justify-between text-sm">
-                  <span className="text-[var(--fg-muted)] text-xs uppercase tracking-wider">{label}</span>
-                  <span className="font-medium text-sm">{value}</span>
-                </div>
-              ))}
-            </div>
-          </Panel>
-
-          <Panel title="Watchlist">
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-[var(--border)]">
+              <span className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider mr-2">Watchlist</span>
               {config.watchlist.map((s) => (
-                <span
-                  key={s}
-                  className="px-2.5 py-1 bg-[var(--primary-dim)] text-[var(--primary)] rounded-md text-[10px] font-semibold uppercase tracking-wider"
-                >
+                <span key={s} className="px-2 py-0.5 bg-[var(--primary-dim)] text-[var(--primary)] rounded text-[10px] font-bold uppercase tracking-wider">
                   {s}
                 </span>
               ))}
             </div>
           </Panel>
-        </div>
+        </>
       )}
     </div>
   );

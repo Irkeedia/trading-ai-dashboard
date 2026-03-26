@@ -68,12 +68,14 @@ export default function TradesPage() {
       key: "amount",
       label: "Qty",
       mono: true,
+      hideOnMobile: true,
       render: (row: Trade) => row.amount.toFixed(6),
     },
     {
       key: "cost",
       label: "Coût",
       mono: true,
+      hideOnMobile: true,
       render: (row: Trade) => `$${row.cost.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
     },
     {
@@ -89,6 +91,7 @@ export default function TradesPage() {
     {
       key: "strategy",
       label: "Stratégie",
+      hideOnMobile: true,
       render: (row: Trade) => (
         <span className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider">{row.strategy || "—"}</span>
       ),
