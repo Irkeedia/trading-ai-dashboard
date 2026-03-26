@@ -75,7 +75,7 @@ export default function EnginePage() {
   }
 
   return (
-    <div className="space-y-5 max-w-3xl">
+    <div className="space-y-5">
       {/* Big status card */}
       <div className="glass rounded-lg p-6 sm:p-8 text-center">
         <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center ${isRunning ? "bg-[var(--green-dim)]" : "bg-[var(--loss-dim)]"}`}>

@@ -30,7 +30,7 @@ export function TopNav() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-t-0 border-x-0">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8 flex items-center h-14 gap-4 md:gap-6">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-16 flex items-center h-14 gap-4 md:gap-6">
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
           <div className="relative w-7 h-7">
