@@ -20,8 +20,13 @@ export default function LoginPage() {
 
     await new Promise((r) => setTimeout(r, 800));
 
-    if (email && password.length >= 4) {
-      document.cookie = "apex_session=authenticated; path=/; max-age=86400; SameSite=Strict";
+    const accounts: Record<string, string> = {
+      "toffolon.mathieu11@gmail.com": "Alpha@Papa2",
+    };
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (accounts[normalizedEmail] && accounts[normalizedEmail] === password) {
+      document.cookie = `apex_session=${btoa(normalizedEmail)}; path=/; max-age=86400; SameSite=Strict`;
       router.push("/dashboard");
     } else {
       setError("Email ou mot de passe invalide");
