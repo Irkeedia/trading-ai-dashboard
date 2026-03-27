@@ -1,4 +1,27 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+
+export function Badge({
+  children,
+  variant = "default",
+}: {
+  children: ReactNode;
+  variant?: "success" | "danger" | "warning" | "default";
+}) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider",
+        variant === "success" && "bg-[var(--green-dim)] text-[var(--green)]",
+        variant === "danger" && "bg-[var(--loss-dim)] text-[var(--loss)]",
+        variant === "warning" && "bg-[var(--amber-dim)] text-[var(--amber)]",
+        variant === "default" && "bg-[var(--primary-dim)] text-[var(--primary-soft)]"
+      )}
+    >
+      {children}
+    </span>
+  );
+}
 
 interface Column<T> {
   key: string;

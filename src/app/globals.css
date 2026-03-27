@@ -5,129 +5,228 @@
 }
 
 :root {
-  --bg: #090509;
-  --bg-raised: #140914;
-  --bg-glass: rgba(19, 10, 18, 0.8);
-  --fg: #fff7fa;
-  --fg-dim: #d4bcc6;
-  --fg-muted: #9f7b89;
-  --border: rgba(255, 255, 255, 0.13);
-  --border-bright: rgba(255, 255, 255, 0.22);
-  --primary: #e11d48;
-  --primary-dim: rgba(225, 29, 72, 0.2);
-  --primary-soft: #ff3d6b;
-  --green: #22c55e;
-  --green-dim: rgba(34, 197, 94, 0.2);
-  --amber: #f59e0b;
-  --amber-dim: rgba(245, 158, 11, 0.2);
-  --loss: #ef4444;
-  --loss-dim: rgba(239, 68, 68, 0.2);
-  --glow: 0 0 44px rgba(225, 29, 72, 0.2);
-  --glow-line-color: var(--primary);
+  --bg: #06060a;
+  --bg-raised: #0b0a10;
+  --surface: rgba(255, 255, 255, 0.035);
+  --bg-glass: rgba(10, 9, 15, 0.78);
+  --fg: #f4f4f7;
+  --fg-dim: #b4b1c0;
+  --fg-muted: #6e6b7a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-bright: rgba(255, 255, 255, 0.14);
+  --primary: #fb7185;
+  --primary-dim: rgba(251, 113, 133, 0.14);
+  --primary-soft: #fda4af;
+  --accent: #38bdf8;
+  --accent-dim: rgba(56, 189, 248, 0.12);
+  --green: #34d399;
+  --green-dim: rgba(52, 211, 153, 0.18);
+  --amber: #fbbf24;
+  --amber-dim: rgba(251, 191, 36, 0.15);
+  --loss: #f87171;
+  --loss-dim: rgba(248, 113, 113, 0.16);
+  --glow: 0 0 60px rgba(251, 113, 133, 0.12);
+  --shadow-card: 0 4px 28px -6px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-nav: 0 8px 32px -8px rgba(0, 0, 0, 0.6);
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
-  background:
-    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(225, 29, 72, 0.13), transparent 60%),
-    radial-gradient(ellipse 90% 70% at 85% 120%, rgba(225, 29, 72, 0.08), transparent 55%),
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 110% 70% at 50% -25%, rgba(251, 113, 133, 0.11), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 95% 5%, rgba(56, 189, 248, 0.07), transparent 42%),
+    radial-gradient(ellipse 45% 40% at 5% 95%, rgba(167, 139, 250, 0.06), transparent 48%),
     var(--bg);
   color: var(--fg);
   font-family: "Sora", system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  font-feature-settings: "ss01" on, "cv01" on;
 }
 
-/* Diagonal scan-line bg */
+/* Subtle dot grid */
 .grid-bg {
-  background-image:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 80px,
-      rgba(225, 29, 72, 0.02) 80px,
-      rgba(225, 29, 72, 0.02) 81px
-    );
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-/* Glass cards */
+/* Glass surfaces — dashboard cards */
 .glass {
-  background: var(--bg-glass);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.055) 0%,
+    rgba(255, 255, 255, 0.02) 42%,
+    rgba(255, 255, 255, 0.025) 100%
+  );
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid var(--border);
-  transition: border-color 0.2s, box-shadow 0.3s, transform 0.2s;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s ease, box-shadow 0.3s ease;
 }
+
 .glass:hover {
   border-color: var(--border-bright);
-  box-shadow: var(--glow);
-  transform: translateY(-1px);
+  box-shadow: var(--shadow-card), 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
-/* Accent line */
+/* Stronger panel (hero strip) */
+.glass-hero {
+  background: linear-gradient(
+    125deg,
+    rgba(251, 113, 133, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 38%,
+    rgba(56, 189, 248, 0.06) 100%
+  );
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-card), 0 0 80px -20px rgba(251, 113, 133, 0.15);
+}
+
+/* Headline gradient */
+.text-gradient {
+  background: linear-gradient(120deg, #ffffff 0%, #fecdd3 38%, #fb7185 72%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .glow-line {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--primary), transparent);
-  opacity: 0.5;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(251, 113, 133, 0.5),
+    rgba(56, 189, 248, 0.35),
+    transparent
+  );
+  opacity: 0.85;
 }
 
-/* Status dots */
 .glow-dot {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--green);
-  box-shadow: 0 0 8px var(--green), 0 0 18px var(--green-dim);
+  box-shadow: 0 0 10px var(--green), 0 0 20px var(--green-dim);
 }
+
 .glow-dot-red {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--loss);
-  box-shadow: 0 0 8px var(--loss), 0 0 18px var(--loss-dim);
+  box-shadow: 0 0 10px var(--loss), 0 0 20px var(--loss-dim);
 }
 
-/* Mono numbers */
-.num { font-family: var(--font-mono); letter-spacing: -0.02em; }
+.num {
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
 
-/* Scrollbar minimal */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--fg-muted); }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
 
-/* Pulse animation */
 @keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
-.animate-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-glow {
+  animation: pulse-glow 2.2s ease-in-out infinite;
+}
 
-/* Signal bar animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.09) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
 @keyframes signal-fill {
-  from { width: 0%; }
+  from {
+    width: 0%;
+  }
 }
-.animate-fill { animation: signal-fill 0.8s ease-out; }
+.animate-fill {
+  animation: signal-fill 0.85s ease-out;
+}
 
-/* Pulse ring */
 @keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(2.5); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 .pulse-ring::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
   border: 1.5px solid var(--primary);
-  animation: pulse-ring 2s ease-out infinite;
+  animation: pulse-ring 2.2s ease-out infinite;
 }
 
-/* Hero specific */
 .hero-gradient {
   background:
-    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(225, 29, 72, 0.15), transparent 70%),
-    radial-gradient(ellipse 40% 40% at 80% 70%, rgba(225, 29, 72, 0.06), transparent);
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(251, 113, 133, 0.12), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 85% 70%, rgba(56, 189, 248, 0.05), transparent);
 }
 
-/* No scrollbar utility */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mini stat cell inside dashboard */
+.stat-cell {
+  border-radius: 0.875rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s ease;
+}
+.stat-cell:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}

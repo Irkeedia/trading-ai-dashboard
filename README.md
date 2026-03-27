@@ -50,9 +50,10 @@ Si tu débutes sur le web ou Next.js, commence ici.
 2. Dans un terminal : `cd dashboard` puis `npm install` (télécharge les dépendances du projet).
 3. Copier `.env.local.example` vers `.env.local`.
 4. Dans `.env.local`, mettre `NEXT_PUBLIC_API_URL=http://localhost:8000` **si** le backend tourne sur le port 8000.
-5. **Démarrer le backend** (voir [../trading_ia/README.md](../trading_ia/README.md)).
-6. Lancer `npm run dev`.
-7. Ouvrir **http://localhost:3000** — tu dois voir l’application.
+5. Si le backend utilise une vraie `API_SECRET_KEY` (pas `change-me-in-production`), ajoute **`NEXT_PUBLIC_TRADING_IA_API_KEY`** avec la **même** valeur pour piloter le moteur / les clés exchange depuis l’UI. *Attention : cette variable est exposée au navigateur.*
+6. **Démarrer le backend** (voir [../trading_ia/README.md](../trading_ia/README.md)).
+7. Lancer `npm run dev`.
+8. Ouvrir **http://localhost:3000** — tu dois voir l’application.
 
 ### Vocabulaire pour toi
 
@@ -65,7 +66,7 @@ Si tu débutes sur le web ou Next.js, commence ici.
 | **Tailwind** | Classes CSS utilitaires pour styliser rapidement. |
 | **`npm install`** | Installe les paquets listés dans `package.json`. |
 | **`npm run dev`** | Lance le serveur de développement (rechargement rapide). |
-| **`NEXT_PUBLIC_...`** | Variable d’environnement **visible côté navigateur** (ne mets jamais de secret dedans). |
+| **`NEXT_PUBLIC_...`** | Variable d’environnement **visible côté navigateur** (évite d’y mettre des secrets sauf compromis connu comme `NEXT_PUBLIC_TRADING_IA_API_KEY` en dev). |
 
 ### Où regarder dans le code en premier
 
@@ -184,7 +185,10 @@ npm run start
 Le frontend appelle le backend via **`apiFetch`** :
 
 - URL de base : `NEXT_PUBLIC_API_URL`
+- Clé optionnelle : si `NEXT_PUBLIC_TRADING_IA_API_KEY` est défini, le header **`X-API-Key`** est envoyé (requis par l’API pour moteur / exchange lorsque `API_SECRET_KEY` est configuré).
 - Implémentation : `src/lib/utils.ts`
+
+Un bandeau d’erreur s’affiche en haut des pages du dashboard si `/api/health` échoue (`src/components/backend-status.tsx`).
 
 Exemples d’endpoints utilisés :
 
@@ -217,6 +221,7 @@ Interface type **cockpit** pleine largeur : lisibilité (tailles, contrastes, es
 |----------|--------|
 | Rien ne s’affiche ou chargement infini | Vérifier que l’API tourne sur `NEXT_PUBLIC_API_URL`. |
 | Erreur CORS | Ajuster `CORS_ORIGINS` côté backend. |
+| **401** sur moteur / clés exchange | Définir `NEXT_PUBLIC_TRADING_IA_API_KEY` = `API_SECRET_KEY` côté API, ou remettre `API_SECRET_KEY=change-me-in-production` en local. |
 | Échec clés exchange | Permissions API exchange (pas de withdraw). |
 
 ---
@@ -228,6 +233,9 @@ Le dashboard peut être déployé sur **Vercel**.
 Variable Vercel :
 
 - `NEXT_PUBLIC_API_URL=https://votre-api.example.com`
+- `NEXT_PUBLIC_TRADING_IA_API_KEY` si l’API exige `X-API-Key` (même valeur que `API_SECRET_KEY` — réfléchis au risque d’exposition).
+
+**Docker :** un `Dockerfile` (build **standalone**) est fourni ; il est utilisé par `docker compose` côté `trading_ia` avec le profil `ui` (voir [../trading_ia/README.md](../trading_ia/README.md)).
 
 ---
 

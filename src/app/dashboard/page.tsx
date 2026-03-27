@@ -1,6 +1,16 @@
 "use client";
 
-import { Activity, ArrowDownRight, ArrowUpRight, Bot, Clock, Crosshair, Gauge, Sparkles, Zap } from "lucide-react";
+import {
+  Activity,
+  ArrowDownRight,
+  ArrowUpRight,
+  Bot,
+  Clock,
+  Crosshair,
+  Gauge,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import { Metric, Panel, Tag } from "@/components/cards";
 import { PortfolioChart } from "@/components/portfolio-chart";
 import { useApi } from "@/lib/hooks";
@@ -52,19 +62,30 @@ interface Trade {
   [key: string]: unknown;
 }
 
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="skeleton h-40 sm:h-44 rounded-2xl" />
+      <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="skeleton h-28 rounded-2xl" />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+        <div className="skeleton h-[380px] rounded-2xl xl:col-span-8" />
+        <div className="skeleton h-[380px] rounded-2xl xl:col-span-4" />
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { data, loading } = useApi<DashboardData>("/api/dashboard", 10000);
   const { data: chartData } = useApi<ChartPoint[]>("/api/portfolio/history", 30000);
   const { data: recentTrades } = useApi<Trade[]>("/api/trades?limit=5", 15000);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[60vh]">
-        <div className="animate-glow text-[var(--fg-muted)] text-xs uppercase tracking-widest">
-          Initialisation du terminal...
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   const portfolio = data?.portfolio || {};
@@ -91,40 +112,50 @@ export default function DashboardPage() {
   const systemHealth = Math.max(70, 100 - (stats.losses ?? 0) * 2);
 
   return (
-    <div className="space-y-6">
-      <section className="glass rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
-        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
-          <div>
-            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[var(--fg-muted)] font-semibold mb-2">
-              cockpit de trading ia
-            </p>
-            <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight">
-              Vue Temps Reel, Decisions Plus Nettes
+    <div className="space-y-8">
+      <section className="glass-hero rounded-2xl px-6 py-6 sm:px-8 sm:py-8">
+        <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-8">
+          <div className="space-y-4 max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1">
+              <span className="relative flex h-2 w-2">
+                <span
+                  className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${isRunning ? "bg-emerald-400" : "bg-red-400"}`}
+                />
+                <span
+                  className={`relative inline-flex h-2 w-2 rounded-full ${isRunning ? "bg-emerald-400" : "bg-red-400"}`}
+                />
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--fg-muted)]">
+                Cockpit temps réel
+              </span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.35rem] font-extrabold leading-[1.1] tracking-tight text-gradient">
+              Décisions plus nettes, vue instantanée
             </h1>
-            <p className="text-sm sm:text-base text-[var(--fg-dim)] mt-2 max-w-3xl">
-              Interface refondue pour voir instantanement l'etat du moteur, les performances, les signaux actifs et le risque.
+            <p className="text-sm sm:text-base text-[var(--fg-dim)] leading-relaxed">
+              Moteur, performances, signaux et risque sur un seul écran — interface pensée pour la lisibilité.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-            <div className="bg-black/25 rounded-xl border border-[var(--border)] p-3">
-              <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Mode</p>
-              <p className="text-sm font-bold mt-1">{engine.mode || "PAPER"}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 xl:w-[min(100%,280px)] gap-3">
+            <div className="stat-cell">
+              <p className="text-[9px] uppercase tracking-[0.15em] text-[var(--fg-muted)] font-semibold">Mode</p>
+              <p className="text-sm font-bold mt-1.5 num">{engine.mode || "PAPER"}</p>
             </div>
-            <div className="bg-black/25 rounded-xl border border-[var(--border)] p-3">
-              <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Statut</p>
-              <p className="text-sm font-bold mt-1 flex items-center gap-2">
+            <div className="stat-cell">
+              <p className="text-[9px] uppercase tracking-[0.15em] text-[var(--fg-muted)] font-semibold">Statut</p>
+              <p className="text-sm font-bold mt-1.5 flex items-center gap-2">
                 <span className={isRunning ? "glow-dot" : "glow-dot-red"} />
-                {isRunning ? "Actif" : "Arrete"}
+                {isRunning ? "Actif" : "Arrêté"}
               </p>
             </div>
-            <div className="bg-black/25 rounded-xl border border-[var(--border)] p-3">
-              <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Uptime</p>
-              <p className="text-sm font-bold mt-1 num">{uptimeStr}</p>
+            <div className="stat-cell">
+              <p className="text-[9px] uppercase tracking-[0.15em] text-[var(--fg-muted)] font-semibold">Uptime</p>
+              <p className="text-sm font-bold mt-1.5 num">{uptimeStr}</p>
             </div>
-            <div className="bg-black/25 rounded-xl border border-[var(--border)] p-3">
-              <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Cycles</p>
-              <p className="text-sm font-bold mt-1 num">{engine.cycle_count ?? 0}</p>
+            <div className="stat-cell">
+              <p className="text-[9px] uppercase tracking-[0.15em] text-[var(--fg-muted)] font-semibold">Cycles</p>
+              <p className="text-sm font-bold mt-1.5 num">{engine.cycle_count ?? 0}</p>
             </div>
           </div>
         </div>
@@ -132,106 +163,139 @@ export default function DashboardPage() {
 
       <section className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
         <Metric
-          label="Capital Total"
+          label="Capital total"
           value={`$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
-          sub={`Libre: $${(portfolio.available_balance ?? 0).toLocaleString("en-US", { minimumFractionDigits: 0 })}`}
+          sub={`Libre : $${(portfolio.available_balance ?? 0).toLocaleString("en-US", { minimumFractionDigits: 0 })}`}
           large
         />
         <Metric
-          label="Performance Totale"
+          label="Performance totale"
           value={`${totalPnl >= 0 ? "+" : ""}$${totalPnl.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
           trend={totalPnl >= 0 ? "up" : "down"}
           large
         />
         <Metric
-          label="PnL Journalier"
+          label="PnL journalier"
           value={`${todayPnl >= 0 ? "+" : ""}$${todayPnl.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
           trend={todayPnl >= 0 ? "up" : "down"}
         />
         <Metric
-          label="Taux de Reussite"
+          label="Taux de réussite"
           value={`${winRate}%`}
           sub={`${stats.total_trades ?? 0} trades`}
         />
       </section>
 
       <section className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-        <Panel title="Courbe de Performance" noPad className="xl:col-span-8">
-          <div className="px-5 pt-4 pb-5">
+        <Panel title="Courbe de performance" noPad className="xl:col-span-8">
+          <div className="px-5 pt-5 pb-6">
             <PortfolioChart data={chartData || []} />
           </div>
         </Panel>
 
-        <Panel title="Controle Systeme" className="xl:col-span-4">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-black/25 px-4 py-3">
+        <Panel title="Contrôle système" className="xl:col-span-4">
+          <div className="space-y-5">
+            <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3.5">
               <div className="flex items-center gap-2.5">
-                <Gauge className="w-4 h-4 text-[var(--primary-soft)]" />
-                <span className="text-xs uppercase tracking-wider text-[var(--fg-muted)]">Sante Systeme</span>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-dim)] text-[var(--accent)]">
+                  <Gauge className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] uppercase tracking-[0.15em] text-[var(--fg-muted)] font-semibold">
+                  Santé système
+                </span>
               </div>
-              <span className="num text-lg font-bold">{systemHealth}%</span>
+              <span className="num text-xl font-bold">{systemHealth}%</span>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs uppercase tracking-wider text-[var(--fg-muted)] flex items-center gap-2">
-                  <Crosshair className="w-3.5 h-3.5" />Risque global
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] uppercase tracking-[0.15em] text-[var(--fg-muted)] font-semibold flex items-center gap-2">
+                  <Crosshair className="w-3.5 h-3.5 opacity-80" />
+                  Risque global
                 </span>
                 <span className="num text-xs font-bold">{riskLevel}%</span>
               </div>
-              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-                <div className="h-full rounded-full bg-gradient-to-r from-[var(--green)] via-[var(--amber)] to-[var(--loss)]" style={{ width: `${riskLevel}%` }} />
+              <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden ring-1 ring-white/[0.06]">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-amber-400 to-red-400 transition-[width] duration-500"
+                  style={{ width: `${riskLevel}%` }}
+                />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
-              <div className="rounded-xl border border-[var(--border)] bg-black/25 px-3 py-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Analyser IA</p>
-                <p className="text-sm font-bold mt-1 flex items-center gap-2"><Bot className="w-3.5 h-3.5 text-[var(--primary-soft)]" />Actif</p>
-              </div>
-              <div className="rounded-xl border border-[var(--border)] bg-black/25 px-3 py-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Cadence</p>
-                <p className="text-sm font-bold mt-1 flex items-center gap-2 num"><Clock className="w-3.5 h-3.5 text-[var(--fg-dim)]" />{uptimeStr}</p>
-              </div>
-              <div className="rounded-xl border border-[var(--border)] bg-black/25 px-3 py-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Cycles</p>
-                <p className="text-sm font-bold mt-1 flex items-center gap-2 num"><Zap className="w-3.5 h-3.5 text-[var(--amber)]" />{engine.cycle_count ?? 0}</p>
-              </div>
-              <div className="rounded-xl border border-[var(--border)] bg-black/25 px-3 py-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Signal moyen</p>
-                <p className="text-sm font-bold mt-1 flex items-center gap-2 num"><Sparkles className="w-3.5 h-3.5 text-[var(--green)]" />{signals.length > 0 ? Math.round((signals.reduce((a, s) => a + s.strength, 0) / signals.length) * 100) : 0}%</p>
-              </div>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { k: "IA", v: "Actif", icon: Bot, tone: "text-[var(--primary-soft)]", bg: "bg-[var(--primary-dim)]" },
+                { k: "Cadence", v: uptimeStr, icon: Clock, tone: "text-[var(--fg-dim)]", bg: "bg-white/[0.06]" },
+                { k: "Cycles", v: String(engine.cycle_count ?? 0), icon: Zap, tone: "text-[var(--amber)]", bg: "bg-[var(--amber-dim)]" },
+                {
+                  k: "Signal moy.",
+                  v: `${signals.length > 0 ? Math.round((signals.reduce((a, s) => a + s.strength, 0) / signals.length) * 100) : 0}%`,
+                  icon: Sparkles,
+                  tone: "text-[var(--green)]",
+                  bg: "bg-[var(--green-dim)]",
+                },
+              ].map((row) => (
+                <div
+                  key={row.k}
+                  className="rounded-xl border border-white/[0.07] bg-white/[0.02] px-3 py-3 flex gap-3 items-center"
+                >
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${row.bg}`}>
+                    <row.icon className={`w-4 h-4 ${row.tone}`} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[9px] uppercase tracking-wider text-[var(--fg-muted)] font-semibold">{row.k}</p>
+                    <p className="text-sm font-bold num truncate">{row.v}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </Panel>
       </section>
 
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <Panel title="Derniers Trades">
-          <div className="space-y-2">
-            {(!recentTrades || recentTrades.length === 0) ? (
-              <p className="text-sm text-[var(--fg-muted)] text-center py-10 uppercase tracking-wider">Aucun trade</p>
+        <Panel title="Derniers trades">
+          <div className="space-y-2.5">
+            {!recentTrades || recentTrades.length === 0 ? (
+              <p className="text-sm text-[var(--fg-muted)] text-center py-14 rounded-xl border border-dashed border-white/10">
+                Aucun trade pour l’instant
+              </p>
             ) : (
               recentTrades.slice(0, 6).map((t, i) => {
                 const d = new Date(t.timestamp);
                 const isBuy = t.side === "buy";
                 return (
-                  <div key={t.id ?? i} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-black/20 px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-md flex items-center justify-center ${isBuy ? "bg-[var(--green-dim)]" : "bg-[var(--loss-dim)]"}`}>
-                        {isBuy
-                          ? <ArrowUpRight className="w-4 h-4 text-[var(--green)]" />
-                          : <ArrowDownRight className="w-4 h-4 text-[var(--loss)]" />}
+                  <div
+                    key={t.id ?? i}
+                    className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-3.5 hover:bg-white/[0.04] transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                          isBuy ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/15 text-red-400"
+                        }`}
+                      >
+                        {isBuy ? (
+                          <ArrowUpRight className="w-4 h-4" />
+                        ) : (
+                          <ArrowDownRight className="w-4 h-4" />
+                        )}
                       </div>
-                      <div>
-                        <span className="text-sm sm:text-base font-semibold">{t.symbol}</span>
+                      <div className="min-w-0">
+                        <span className="text-sm sm:text-base font-semibold block truncate">{t.symbol}</span>
                         <div className="text-[11px] text-[var(--fg-muted)] num">
-                          {d.toLocaleDateString("fr-FR")} {d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                          {d.toLocaleDateString("fr-FR")}{" "}
+                          {d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className={`text-sm sm:text-base font-bold num ${t.pnl >= 0 ? "text-[var(--green)]" : "text-[var(--loss)]"}`}>
+                    <div className="text-right shrink-0 pl-2">
+                      <span
+                        className={`text-sm sm:text-base font-bold num block ${
+                          t.pnl >= 0 ? "text-[var(--green)]" : "text-[var(--loss)]"
+                        }`}
+                      >
                         {t.pnl >= 0 ? "+" : ""}${t.pnl.toFixed(2)}
                       </span>
                       <div className="text-[11px] text-[var(--fg-muted)] num">
@@ -245,25 +309,27 @@ export default function DashboardPage() {
           </div>
         </Panel>
 
-        <Panel title="Signaux En Direct">
-          <div className="space-y-2 max-h-[430px] overflow-y-auto no-scrollbar pr-1">
+        <Panel title="Signaux en direct">
+          <div className="space-y-2.5 max-h-[430px] overflow-y-auto no-scrollbar pr-1">
             {signals.length === 0 ? (
-              <p className="text-sm text-[var(--fg-muted)] text-center py-10 uppercase tracking-wider">
+              <p className="text-sm text-[var(--fg-muted)] text-center py-14 rounded-xl border border-dashed border-white/10">
                 Aucun signal
               </p>
             ) : (
               signals.map((s, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-black/20 px-4 py-3"
+                  className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-3.5 hover:bg-white/[0.04] transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-md bg-[var(--primary-dim)] flex items-center justify-center">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--primary-dim)] flex items-center justify-center shrink-0">
                       <Activity className="w-4 h-4 text-[var(--primary-soft)]" />
                     </div>
-                    <div>
-                      <span className="text-sm sm:text-base font-semibold">{s.symbol}</span>
-                      <div className="text-[11px] text-[var(--fg-muted)] uppercase tracking-wide">{s.source}</div>
+                    <div className="min-w-0">
+                      <span className="text-sm sm:text-base font-semibold block truncate">{s.symbol}</span>
+                      <div className="text-[11px] text-[var(--fg-muted)] uppercase tracking-wide truncate">
+                        {s.source}
+                      </div>
                     </div>
                   </div>
                   <Tag variant={s.signal_type === "BUY" ? "buy" : s.signal_type === "SELL" ? "sell" : "ghost"}>
@@ -277,24 +343,26 @@ export default function DashboardPage() {
       </section>
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-        <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold num text-[var(--green)]">{stats.wins ?? 0}</p>
-          <p className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider mt-1">Trades gagnants</p>
-        </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold num text-[var(--loss)]">{stats.losses ?? 0}</p>
-          <p className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider mt-1">Trades perdants</p>
-        </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold num">{engine.cycle_count ?? 0}</p>
-          <p className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider mt-1">Cycles moteur</p>
-        </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold num text-[var(--amber)]">
-            ${(portfolio.available_balance ?? 0).toLocaleString("en-US", { minimumFractionDigits: 0 })}
-          </p>
-          <p className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider mt-1">Balance libre</p>
-        </div>
+        {[
+          { label: "Trades gagnants", value: stats.wins ?? 0, color: "text-[var(--green)]" },
+          { label: "Trades perdants", value: stats.losses ?? 0, color: "text-[var(--loss)]" },
+          { label: "Cycles moteur", value: engine.cycle_count ?? 0, color: "text-[var(--fg)]" },
+          {
+            label: "Balance libre",
+            value: `$${(portfolio.available_balance ?? 0).toLocaleString("en-US", { minimumFractionDigits: 0 })}`,
+            color: "text-[var(--amber)]",
+          },
+        ].map((row) => (
+          <div
+            key={row.label}
+            className="glass rounded-2xl p-5 text-center border border-white/[0.06] hover:border-white/10 transition-colors"
+          >
+            <p className={`text-2xl sm:text-3xl font-bold num ${row.color}`}>{row.value}</p>
+            <p className="text-[9px] sm:text-[10px] text-[var(--fg-muted)] uppercase tracking-[0.18em] font-semibold mt-2">
+              {row.label}
+            </p>
+          </div>
+        ))}
       </section>
     </div>
   );
