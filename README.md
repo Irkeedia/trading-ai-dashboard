@@ -1,14 +1,94 @@
-# Trading IA Dashboard
+# Trading IA — Dashboard (Frontend)
 
-Frontend Next.js pour piloter et monitorer le moteur Trading IA.
+**Interface web** (Next.js) pour piloter et surveiller le moteur Trading IA.
 
-Le dashboard permet de:
-- suivre les performances (portfolio, PnL, win rate)
-- voir les trades, signaux, analyses IA et news
-- demarrer / arreter le moteur
-- connecter les cles exchange utilisateur avec validation backend
+Elle permet notamment de :
 
-## Stack
+- suivre les performances (portefeuille, PnL, taux de réussite) ;
+- voir les trades, signaux, analyses IA et actualités ;
+- démarrer / arrêter le moteur ;
+- connecter les clés exchange utilisateur (validation côté backend).
+
+**Important :** ce projet **dépend du backend** dans `../trading_ia`. Sans API qui tourne, beaucoup d’écrans sembleront vides ou en erreur.
+
+---
+
+## Sommaire
+
+1. [C’est quoi ce dossier ?](#cest-quoi-ce-dossier-)
+2. [Pour François (débutant)](#pour-françois-débutant)
+3. [Glossaire rapide](#glossaire-rapide)
+4. [Stack technique](#stack-technique)
+5. [Structure du projet](#structure-du-projet)
+6. [Installation locale](#installation-locale)
+7. [Lancer en développement](#lancer-en-développement)
+8. [Build production](#build-production)
+9. [Pages principales](#pages-principales)
+10. [Intégration API](#intégration-api)
+11. [UX et design](#ux-et-design)
+12. [Dépannage](#dépannage)
+13. [Déploiement](#déploiement)
+
+---
+
+## C’est quoi ce dossier ?
+
+C’est la **partie visible dans le navigateur** : boutons, graphiques, menus.  
+Elle **parle au backend** via des appels HTTP (fetch) vers l’URL définie dans `.env.local`.
+
+**En pratique :** lance d’abord l’API (`trading_ia`), puis ce dashboard.
+
+---
+
+## Pour François (débutant)
+
+Si tu débutes sur le web ou Next.js, commence ici.
+
+### Ordre recommandé le premier jour
+
+1. **Installer Node.js LTS** (vérifie avec `node -v` et `npm -v`).
+2. Dans un terminal : `cd dashboard` puis `npm install` (télécharge les dépendances du projet).
+3. Copier `.env.local.example` vers `.env.local`.
+4. Dans `.env.local`, mettre `NEXT_PUBLIC_API_URL=http://localhost:8000` **si** le backend tourne sur le port 8000.
+5. **Démarrer le backend** (voir [../trading_ia/README.md](../trading_ia/README.md)).
+6. Lancer `npm run dev`.
+7. Ouvrir **http://localhost:3000** — tu dois voir l’application.
+
+### Vocabulaire pour toi
+
+| Terme | Signification simple |
+|--------|----------------------|
+| **Frontend** | Ce que l’utilisateur voit dans le navigateur (ce dossier). |
+| **Next.js** | Framework React pour faire des sites avec routing et SSR/SSG selon les pages. |
+| **React** | Bibliothèque pour construire l’UI avec des composants réutilisables. |
+| **TypeScript** | JavaScript avec des types pour éviter certaines erreurs à l’écriture. |
+| **Tailwind** | Classes CSS utilitaires pour styliser rapidement. |
+| **`npm install`** | Installe les paquets listés dans `package.json`. |
+| **`npm run dev`** | Lance le serveur de développement (rechargement rapide). |
+| **`NEXT_PUBLIC_...`** | Variable d’environnement **visible côté navigateur** (ne mets jamais de secret dedans). |
+
+### Où regarder dans le code en premier
+
+- `src/lib/utils.ts` — fonction `apiFetch` et base URL de l’API.
+- `src/app/dashboard/page.tsx` — page d’accueil du cockpit.
+- `src/components/` — blocs réutilisables (cartes, graphiques, navigation).
+
+### Pièges fréquents
+
+- **Page blanche ou données absentes** → Backend arrêté ou mauvaise `NEXT_PUBLIC_API_URL`.
+- **Erreur CORS dans la console** → Côté backend, vérifier `CORS_ORIGINS` (doit inclure l’origine du dashboard, ex. `http://localhost:3000`).
+- **Clés exchange refusées** → Vérifier les permissions sur l’exchange (pas de retrait) et les messages d’erreur de l’API.
+
+---
+
+## Glossaire rapide
+
+- **PnL** : profit et perte (performance).
+- **Cockpit** : vue d’ensemble type tableau de bord.
+
+---
+
+## Stack technique
 
 - Next.js 15
 - React 19
@@ -17,30 +97,34 @@ Le dashboard permet de:
 - Recharts
 - lucide-react
 
-## Structure
+---
+
+## Structure du projet
 
 ```text
 dashboard/
-|- src/app/
-|  |- login/
-|  |- dashboard/
-|     |- page.tsx           # Overview cockpit
-|     |- trades/
-|     |- signals/
-|     |- analyses/
-|     |- news/
-|     |- engine/
-|     |- settings/
-|- src/components/
-|  |- top-nav.tsx
-|  |- cards.tsx
-|  |- portfolio-chart.tsx
-|- src/lib/
-|  |- hooks.ts
-|  |- utils.ts              # apiFetch + API base
-|- .env.local.example
-|- package.json
+├── src/app/
+│   ├── login/
+│   └── dashboard/
+│       ├── page.tsx        # Vue d’ensemble cockpit
+│       ├── trades/
+│       ├── signals/
+│       ├── analyses/
+│       ├── news/
+│       ├── engine/
+│       └── settings/
+├── src/components/
+│   ├── top-nav.tsx
+│   ├── cards.tsx
+│   └── portfolio-chart.tsx
+├── src/lib/
+│   ├── hooks.ts
+│   └── utils.ts           # apiFetch + base API
+├── .env.local.example
+└── package.json
 ```
+
+---
 
 ## Installation locale
 
@@ -50,21 +134,26 @@ npm install
 cp .env.local.example .env.local
 ```
 
-Dans `.env.local`, renseigner:
+Dans `.env.local` :
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-## Lancer en dev
+Adapte l’URL si ton API n’est pas sur le port 8000.
+
+---
+
+## Lancer en développement
 
 ```bash
 cd dashboard
 npm run dev
 ```
 
-App dispo sur:
-- `http://localhost:3000`
+Application : [http://localhost:3000](http://localhost:3000)
+
+---
 
 ## Build production
 
@@ -73,24 +162,32 @@ npm run build
 npm run start
 ```
 
+---
+
 ## Pages principales
 
-- `/login`
-- `/dashboard` (overview)
-- `/dashboard/trades`
-- `/dashboard/signals`
-- `/dashboard/analyses`
-- `/dashboard/news`
-- `/dashboard/engine`
-- `/dashboard/settings`
+| Chemin | Rôle |
+|--------|------|
+| `/login` | Connexion |
+| `/dashboard` | Vue d’ensemble |
+| `/dashboard/trades` | Trades |
+| `/dashboard/signals` | Signaux |
+| `/dashboard/analyses` | Analyses IA |
+| `/dashboard/news` | Actualités |
+| `/dashboard/engine` | Contrôle moteur |
+| `/dashboard/settings` | Réglages / clés |
 
-## Integration API
+---
 
-Le frontend appelle l'API backend via `apiFetch`:
-- base URL: `NEXT_PUBLIC_API_URL`
-- helper: `src/lib/utils.ts`
+## Intégration API
 
-Exemples d'endpoints utilises:
+Le frontend appelle le backend via **`apiFetch`** :
+
+- URL de base : `NEXT_PUBLIC_API_URL`
+- Implémentation : `src/lib/utils.ts`
+
+Exemples d’endpoints utilisés :
+
 - `GET /api/dashboard`
 - `GET /api/portfolio/history`
 - `GET /api/trades`
@@ -104,23 +201,34 @@ Exemples d'endpoints utilises:
 - `GET /api/exchange/keys`
 - `DELETE /api/exchange/keys`
 
+Détail des routes : [../trading_ia/README.md](../trading_ia/README.md).
+
+---
+
 ## UX et design
 
-La version actuelle a une UI cockpit full-width:
-- meilleure lisibilite (tailles, contrastes, espacements)
-- navigation superieure renforcee
-- cartes de metriques agrandies
-- graphique portfolio plus grand
+Interface type **cockpit** pleine largeur : lisibilité (tailles, contrastes, espacements), navigation en tête renforcée, cartes métriques plus grandes, graphique portefeuille plus visible.
 
-## Troubleshooting rapide
+---
 
-- Si rien ne s'affiche: verifier que l'API tourne sur `NEXT_PUBLIC_API_URL`
-- Si erreur CORS: verifier `CORS_ORIGINS` cote backend
-- Si les cles exchange echouent: verifier permissions API exchange (pas de withdraw)
+## Dépannage
 
-## Deploiement
+| Symptôme | Piste |
+|----------|--------|
+| Rien ne s’affiche ou chargement infini | Vérifier que l’API tourne sur `NEXT_PUBLIC_API_URL`. |
+| Erreur CORS | Ajuster `CORS_ORIGINS` côté backend. |
+| Échec clés exchange | Permissions API exchange (pas de withdraw). |
 
-Le dashboard peut etre deploie sur Vercel.
+---
 
-Variables d'environnement Vercel:
+## Déploiement
+
+Le dashboard peut être déployé sur **Vercel**.
+
+Variable Vercel :
+
 - `NEXT_PUBLIC_API_URL=https://votre-api.example.com`
+
+---
+
+*Prérequis : API Trading IA — voir [../trading_ia/README.md](../trading_ia/README.md).*
